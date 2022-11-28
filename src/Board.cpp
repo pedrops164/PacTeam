@@ -1,13 +1,13 @@
 #include "../libs/Board.h"
+#include "../libs/Entity.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
 using namespace std;
 
-Board::Board(string path, float interval) : pieceRepresentation{'#', '.', 'o', ' '}{
-	
-	intervalPeriod = interval;
+Board::Board(string path) : pieceRepresentation{'#', '.', 'o', ' ', 'M', '{'} {
+	int currentId = 0;
 	ifstream map(path); //input file stream from path to the map text file
 	if (!map) {
 		//couldnt open file
@@ -34,13 +34,20 @@ Board::Board(string path, float interval) : pieceRepresentation{'#', '.', 'o', '
 				board[currentIndex] = Piece::Food;
 			} else if (currentLine[i] == ' ') {
 				board[currentIndex] = Piece::Empty;
+			} else if (currentLine[i] == 'M') {
+				board[currentIndex] = Piece::Ghost;
+				Entity* ghost = new Entity(currentId, 1, 2, Position(i, j), Direction::Up);
+				entities[currentId] = ghost;
+				currentId++;
+			} else if (currentLine[i] == '{') {
+				board[currentIndex] = Piece::Player;
+				Entity* player = new Entity(currentId, 3, 1, Position(i, j), Direction::Right);
+				entities[currentId] = player;
+				playerId = currentId;
+				currentId++;
 			}
 		}
 	}
-}
-
-float Board::getIntervalPeriod() {
-	return intervalPeriod;
 }
 
 void Board::printBoard() {
@@ -61,4 +68,64 @@ void Board::printBoard() {
 		cout << endl;
 	}
 	free(representation);
+}
+
+void Board::move(int id) {
+	if (entities.find(id) != entities.end()) {
+		Entity* ent = entities[id];
+		Direction currentDirection = ent->getDirection();
+		Position currentPosition = ent->getPosition();
+		Position newPosition = currentPosition.translate(currentDirection);
+		if (!isWall(newPosition)) {
+			setPiece(newPosition, getPiece(currentPosition));
+			setPiece(currentPosition, Empty);
+			ent->setPosition(newPosition);
+		}
+	}
+	else {
+		std::cout << "Entity id " << id << " doesnt exist";
+	}
+}
+
+void Board::move(int id, Direction newDirection) {
+	if (entities.find(id) != entities.end()) {
+		Entity* ent = entities[id];
+		Direction currentDirection = ent->getDirection();
+		if (newDirection == currentDirection) {
+			Board::move(id);
+		}
+		else {
+
+			//Position currentPosition = ent->getPosition();
+			//setPiece(currentPosition, (piece of new direction));
+			ent->setDirection(newDirection);
+		}
+		
+	}
+	else {
+		std::cout << "Entity id " << id << " doesnt exist";
+	}
+}
+
+bool Board::isWall(Position position) {
+	int index = position.getY() * width + position.getX();
+	return board[index] == Wall;
+}
+
+Piece Board::getPiece(Position position) {
+	int index = getIndex(position);
+	return board[index];
+}
+
+void Board::setPiece(Position position, Piece newPiece) {
+	int index = getIndex(position);
+	board[index] = newPiece;
+}
+
+int Board::getIndex(Position position) {
+	return position.getY() * width + position.getX();
+}
+
+int Board::getPlayerId() {
+	return playerId;
 }
