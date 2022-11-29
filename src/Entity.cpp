@@ -1,8 +1,7 @@
 #include "../libs/Entity.h"
 #include <iostream>
 
-Entity::Entity(int id, int nLives, int ticksPerMove, Position pos, Direction direction):
-	id(id),
+Entity::Entity(int nLives, int ticksPerMove, Position pos, Direction direction):
 	nLives(nLives),
 	ticksPerMove(ticksPerMove),
 	pos(pos),

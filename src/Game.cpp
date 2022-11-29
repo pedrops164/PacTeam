@@ -1,10 +1,13 @@
 #include "../libs/Game.h"
 
 
-Game::Game(std::string mapPath, float interval):
+Game::Game(std::string mapPath, float interval, int ticksPlayer, int ticksGhosts) :
 	board(Board(mapPath)),
 	intervalPeriod(interval)
 {
+	ticksPerMovePlayer = ticksPlayer;
+	ticksPerMoveGhosts = ticksGhosts;
+	totalTicks = 0;
 }
 
 void Game::printBoard() {
@@ -12,11 +15,17 @@ void Game::printBoard() {
 }
 
 void Game::movePlayer() {
-	int playerId = board.getPlayerId();
-	board.move(playerId);
+	board.movePlayer();
 }
 
-void Game::movePlayer(Direction direction) {
-	int playerId = board.getPlayerId();
-	board.move(playerId, direction);
+void Game::update() {
+	if (totalTicks % ticksPerMovePlayer == 0) {
+		//time to update Player
+		board.updatePlayer();
+	}
+	if (totalTicks % ticksPerMoveGhosts == 0) {
+		//time to update Ghosts
+	}
+	
+	totalTicks += 1;
 }

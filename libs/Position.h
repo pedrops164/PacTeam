@@ -1,5 +1,6 @@
-#pragma once
+#ifndef _POSITION_
 
+#define _POSITION_
 #include "Direction.h"
 
 class Position {
@@ -12,3 +13,5 @@ public:
 	int getX();
 	int getY();
 };
+
+#endif

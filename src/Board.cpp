@@ -1,13 +1,19 @@
 #include "../libs/Board.h"
-#include "../libs/Entity.h"
+#include "../libs/Ghost.h"
+#include <windows.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
+
 using namespace std;
 
 Board::Board(string path) : pieceRepresentation{'#', '.', 'o', ' ', 'M', '{'} {
-	int currentId = 0;
+	int currentGhostId = 0;
 	ifstream map(path); //input file stream from path to the map text file
 	if (!map) {
 		//couldnt open file
@@ -35,16 +41,13 @@ Board::Board(string path) : pieceRepresentation{'#', '.', 'o', ' ', 'M', '{'} {
 			} else if (currentLine[i] == ' ') {
 				board[currentIndex] = Piece::Empty;
 			} else if (currentLine[i] == 'M') {
-				board[currentIndex] = Piece::Ghost;
-				Entity* ghost = new Entity(currentId, 1, 2, Position(i, j), Direction::Up);
-				entities[currentId] = ghost;
-				currentId++;
+				board[currentIndex] = Piece::Ghost1;
+				Entity* ghost = new Ghost(currentGhostId, 1, 2, Position(i, j), Direction::Up);
+				ghosts[currentGhostId] = ghost;
+				currentGhostId++;
 			} else if (currentLine[i] == '{') {
 				board[currentIndex] = Piece::Player;
-				Entity* player = new Entity(currentId, 3, 1, Position(i, j), Direction::Right);
-				entities[currentId] = player;
-				playerId = currentId;
-				currentId++;
+				player = new Entity(3, 1, Position(i, j), Direction::Right);
 			}
 		}
 	}
@@ -70,24 +73,35 @@ void Board::printBoard() {
 	free(representation);
 }
 
-void Board::move(int id) {
-	if (entities.find(id) != entities.end()) {
-		Entity* ent = entities[id];
-		Direction currentDirection = ent->getDirection();
-		Position currentPosition = ent->getPosition();
-		Position newPosition = currentPosition.translate(currentDirection);
-		if (!isWall(newPosition)) {
-			setPiece(newPosition, getPiece(currentPosition));
-			setPiece(currentPosition, Empty);
-			ent->setPosition(newPosition);
-		}
-	}
-	else {
-		std::cout << "Entity id " << id << " doesnt exist";
+void Board::movePlayer() {
+	Direction currentDirection = player->getDirection();
+	Position currentPosition = player->getPosition();
+	Position newPosition = currentPosition.translate(currentDirection);
+	if (!isWall(newPosition)) {
+		setPiece(newPosition, getPiece(currentPosition));
+		setPiece(currentPosition, Empty);
+		player->setPosition(newPosition);
 	}
 }
 
-void Board::move(int id, Direction newDirection) {
+void Board::moveGhost(int id) {
+	if (id > 3) {
+		std::cout << "id de ghost invalido" << std::endl;
+	}
+
+	Entity* ghost = ghosts[id];
+	Direction currentDirection = ghost->getDirection();
+	Position currentPosition = ghost->getPosition();
+	Position newPosition = currentPosition.translate(currentDirection);
+	if (!isWall(newPosition)) {
+		//need to do changes here. for example, ghosts dont eat food
+		setPiece(newPosition, getPiece(currentPosition));
+		setPiece(currentPosition, Empty);
+		ghost->setPosition(newPosition);
+	}
+}
+/*
+* void Board::move(int id, Direction newDirection) {
 	if (entities.find(id) != entities.end()) {
 		Entity* ent = entities[id];
 		Direction currentDirection = ent->getDirection();
@@ -106,6 +120,8 @@ void Board::move(int id, Direction newDirection) {
 		std::cout << "Entity id " << id << " doesnt exist";
 	}
 }
+*/
+
 
 bool Board::isWall(Position position) {
 	int index = position.getY() * width + position.getX();
@@ -126,6 +142,31 @@ int Board::getIndex(Position position) {
 	return position.getY() * width + position.getX();
 }
 
-int Board::getPlayerId() {
-	return playerId;
+void Board::changePlayerDirection(Direction newDirection) {
+	changeDirection(player, newDirection);
+}
+
+void Board::changeGhostDirection(int id, Direction newDirection) {
+	changeDirection(ghosts[id], newDirection);
+}
+
+void Board::changeDirection(Entity* ent, Direction newDirection) {
+	ent->setDirection(newDirection);
+}
+
+void Board::updatePlayer() {
+	if (GetAsyncKeyState(VK_UP) & 1) {
+		//Up arrow was clicked since last time
+		player->setDirection(Direction::Up);
+	}
+	else if (GetAsyncKeyState(VK_DOWN) & 1) {
+		player->setDirection(Direction::Down);
+	}
+	else if (GetAsyncKeyState(VK_RIGHT) & 1) {
+		player->setDirection(Direction::Right);
+	}
+	else if (GetAsyncKeyState(VK_LEFT) & 1) {
+		player->setDirection(Direction::Left);
+	}
+	movePlayer();
 }

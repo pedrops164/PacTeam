@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _ENTITY_
+
+#define _ENTITY_
 
 #include "Position.h"
 #include "Direction.h"
@@ -7,11 +9,11 @@ class Entity {
 private:
 	int id; //unique id of entity
 	int nLives; //number of lives
-	int ticksPerMove; //if the value is 1, it means the entity moves every tick.
+	int ticksPerMove;
 	Position pos;
 	Direction direction;
 public:
-	Entity(int id, int nLives, int ticksPerMove, Position pos, Direction direction);
+	Entity(int nLives, int ticksPerMove, Position pos, Direction direction);
 	Entity();
 	int getId();
 	Direction getDirection();
@@ -20,3 +22,5 @@ public:
 	void setDirection(Direction newDirection);
 	void print();
 };
+
+#endif
