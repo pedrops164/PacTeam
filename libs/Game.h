@@ -7,12 +7,12 @@
 class Game {
 private:
 	Board board;
-	float intervalPeriod; //time between screen updates
+	int ticksPerSecond;
 	int totalTicks;
 	int ticksPerMovePlayer; //if the value is 1, it means the player moves every tick.
 	int ticksPerMoveGhosts;
 public:
-	Game(std::string mapPath, float interval, int ticksPlayer, int ticksGhosts);
+	Game(std::string mapPath, int tPS, int ticksPlayer, int ticksGhosts);
 	void printBoard();
 	void movePlayer();
 	void update();

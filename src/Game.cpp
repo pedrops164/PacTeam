@@ -1,9 +1,9 @@
 #include "../libs/Game.h"
 
 
-Game::Game(std::string mapPath, float interval, int ticksPlayer, int ticksGhosts) :
+Game::Game(std::string mapPath, int tPS, int ticksPlayer, int ticksGhosts) :
 	board(Board(mapPath)),
-	intervalPeriod(interval)
+	ticksPerSecond(tPS)
 {
 	ticksPerMovePlayer = ticksPlayer;
 	ticksPerMoveGhosts = ticksGhosts;

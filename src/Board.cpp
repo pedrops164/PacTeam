@@ -176,6 +176,7 @@ void Board::setCurveDirection(Entity* ghost) {
 	// type 2 tunnel, and retrieves the
 	Position currentPosition = ghost->getPosition();
 	Direction currentDirection = ghost->getDirection();
+	//if the piece in the current direction isnt a wall, we dont change the direction
 	Direction adjacent1, adjacent2;
 	/*
 	* If the entity's current direction is up or down, the positions to check are to the left
