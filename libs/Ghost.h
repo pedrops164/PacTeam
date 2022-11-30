@@ -10,7 +10,7 @@ class Ghost : public Entity {
 private:
 	int ghostId;
 public:
-	Ghost(int gId, int nLives, int ticksPerMove, Position pos, Direction direction);
+	Ghost(int gId, int ticksPerMove, Position pos, Direction direction);
 };
 
 #endif

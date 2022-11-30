@@ -1,6 +1,6 @@
 #include "../libs/Ghost.h"
 
-Ghost::Ghost(int gId, int nLives, int ticksPerMove, Position pos, Direction direction)
-	:Entity(nLives, ticksPerMove, pos, direction) {
+Ghost::Ghost(int gId, int ticksPerMove, Position pos, Direction direction)
+	:Entity(1, ticksPerMove, pos, direction) {
 	ghostId = gId;
 }

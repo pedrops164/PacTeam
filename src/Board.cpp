@@ -1,4 +1,5 @@
 #include "../libs/Board.h"
+#include "../libs/PieceBoard.h"
 #include "../libs/Ghost.h"
 #include <windows.h>
 #include <iostream>
@@ -12,7 +13,7 @@
 
 using namespace std;
 
-Board::Board(string path) : pieceRepresentation{'#', '.', 'o', ' ', 'M', '{'} {
+Board::Board(string path) {
 	int currentGhostId = 0;
 	ifstream map(path); //input file stream from path to the map text file
 	if (!map) {
@@ -27,42 +28,47 @@ Board::Board(string path) : pieceRepresentation{'#', '.', 'o', ' ', 'M', '{'} {
 	* So first we get these values from the files and put in variables width and height
 	*/
 	iss >> width >> height; //set width and height parameters
-	board = (Piece*) malloc(width * height * sizeof(Piece)); //we malloc the array with required space
+	pieceBoard = new PieceBoard(width, height);
 	for (int j = 0; j < height; j++) {
 		getline(map, currentLine);
 		for (int i = 0; i < width; i++) {
-			int currentIndex = j * height + i;
+			Position position = Position(i, j);
 			if (currentLine[i] == '#') {
-				board[currentIndex] = Piece::Wall;
+				pieceBoard->setWall(position);
 			} else if (currentLine[i] == 'o') {
-				board[currentIndex] = Piece::BigFood;
+				pieceBoard->setBigFood(position);
 			} else if (currentLine[i] == '.') {
-				board[currentIndex] = Piece::Food;
+				pieceBoard->setSmallFood(position);
 			} else if (currentLine[i] == ' ') {
-				board[currentIndex] = Piece::Empty;
+				pieceBoard->setEmpty(position);
 			} else if (currentLine[i] == 'M') {
-				board[currentIndex] = Piece::Ghost1;
-				Entity* ghost = new Ghost(currentGhostId, 1, 2, Position(i, j), Direction::Up);
+				//board[currentIndex] = Piece::Ghost1;
+				pieceBoard->setEmpty(position);
+				Entity* ghost = new Ghost(currentGhostId, 2, Position(i, j), Direction::Up);
 				ghosts[currentGhostId] = ghost;
 				currentGhostId++;
 			} else if (currentLine[i] == '{') {
-				board[currentIndex] = Piece::Player;
+				//board[currentIndex] = Piece::Player;
+				pieceBoard->setEmpty(position);
 				player = new Entity(3, 1, Position(i, j), Direction::Right);
 			}
 		}
 	}
+	pieceBoard->generateIntersectionBoard();
 }
 
 void Board::printBoard() {
-	char* representation = (char*) malloc(width * height * sizeof(char));
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			int currentIndex = j * height + i;
-			Piece piece = board[currentIndex];
-			representation[currentIndex] = pieceRepresentation[piece];
-		}
+	char* representation = pieceBoard->getRepresentation();
+
+	//... set entities characters in representation 1d matrix
+	Position playerPosition = player->getPosition ();
+	representation[pieceBoard->getIndex(playerPosition)] = '{'; //change this later
+
+	for (int j = 0; j < 4; j++) {
+		Position ghostPosition = ghosts[j]->getPosition();
+		representation[pieceBoard->getIndex(ghostPosition)] = 'M'; //change this later
 	}
-	//... set entities characters in representation matrix
+
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			int currentIndex = j * height + i;
@@ -73,100 +79,132 @@ void Board::printBoard() {
 	free(representation);
 }
 
+/*
+* If the next position isn't a wall, moves the player in the current direction,
+* eating the next piece (if there is)
+*/
 void Board::movePlayer() {
 	Direction currentDirection = player->getDirection();
 	Position currentPosition = player->getPosition();
 	Position newPosition = currentPosition.translate(currentDirection);
-	if (!isWall(newPosition)) {
-		setPiece(newPosition, getPiece(currentPosition));
-		setPiece(currentPosition, Empty);
+	if (!pieceBoard->isWall(newPosition)) {
+		//add the point system later
+		pieceBoard->setEmpty(newPosition);
 		player->setPosition(newPosition);
 	}
 }
 
-void Board::moveGhost(int id) {
-	if (id > 3) {
-		std::cout << "id de ghost invalido" << std::endl;
-	}
-
-	Entity* ghost = ghosts[id];
-	Direction currentDirection = ghost->getDirection();
-	Position currentPosition = ghost->getPosition();
-	Position newPosition = currentPosition.translate(currentDirection);
-	if (!isWall(newPosition)) {
-		//need to do changes here. for example, ghosts dont eat food
-		setPiece(newPosition, getPiece(currentPosition));
-		setPiece(currentPosition, Empty);
-		ghost->setPosition(newPosition);
-	}
-}
-/*
-* void Board::move(int id, Direction newDirection) {
-	if (entities.find(id) != entities.end()) {
-		Entity* ent = entities[id];
-		Direction currentDirection = ent->getDirection();
-		if (newDirection == currentDirection) {
-			Board::move(id);
-		}
-		else {
-
-			//Position currentPosition = ent->getPosition();
-			//setPiece(currentPosition, (piece of new direction));
-			ent->setDirection(newDirection);
-		}
-		
-	}
-	else {
-		std::cout << "Entity id " << id << " doesnt exist";
-	}
-}
-*/
-
-
-bool Board::isWall(Position position) {
-	int index = position.getY() * width + position.getX();
-	return board[index] == Wall;
-}
-
-Piece Board::getPiece(Position position) {
-	int index = getIndex(position);
-	return board[index];
-}
-
-void Board::setPiece(Position position, Piece newPiece) {
-	int index = getIndex(position);
-	board[index] = newPiece;
-}
-
-int Board::getIndex(Position position) {
-	return position.getY() * width + position.getX();
-}
-
 void Board::changePlayerDirection(Direction newDirection) {
-	changeDirection(player, newDirection);
+	Position nextPosition = player->getPosition().translate(newDirection);
+	if (!pieceBoard->isWall(nextPosition)) {
+		player->setDirection(newDirection);
+	}
 }
 
-void Board::changeGhostDirection(int id, Direction newDirection) {
-	changeDirection(ghosts[id], newDirection);
-}
-
-void Board::changeDirection(Entity* ent, Direction newDirection) {
-	ent->setDirection(newDirection);
-}
-
+/*
+* Checks if an arrow key was clicked since last tick, and if so changes the direction accordingly
+* Then moves the player
+*/
 void Board::updatePlayer() {
 	if (GetAsyncKeyState(VK_UP) & 1) {
 		//Up arrow was clicked since last time
-		player->setDirection(Direction::Up);
+		//player->setDirection(Direction::Up);
+		changePlayerDirection(Direction::Up);
 	}
 	else if (GetAsyncKeyState(VK_DOWN) & 1) {
-		player->setDirection(Direction::Down);
+		changePlayerDirection(Direction::Down);
 	}
 	else if (GetAsyncKeyState(VK_RIGHT) & 1) {
-		player->setDirection(Direction::Right);
+		changePlayerDirection(Direction::Right);
 	}
 	else if (GetAsyncKeyState(VK_LEFT) & 1) {
-		player->setDirection(Direction::Left);
+		changePlayerDirection(Direction::Left);
 	}
 	movePlayer();
+}
+
+/*
+* Updates the position of every ghost
+*/
+void Board::updateGhosts() {
+
+	for (int i = 0; i < 4; i++) {
+		Entity* ghost = ghosts[i];
+		Position ghostPos = ghost->getPosition();
+		/*
+		* Whatever the case is, the ghost can't go to the square
+		* it was just in
+		*/
+		if (pieceBoard->isIntersection(ghostPos)) {
+			/*
+			* ghost is in an intersection
+			* intersections have 3 or more surrounding squares 
+			*/
+
+		}
+		else {
+			/*
+			* ghost is in a tunel
+			*
+			* tunnels can be of type 1  # #   or of type 2  # #
+			*						    #M#			        #M
+			*						    # #			        ###
+			* 
+			*/
+			if (pieceBoard->isStraightTunel(ghostPos)) {
+				//ghost is in tunnel type 1 (straight line), so we just move the ghost
+				moveGhost(ghost);
+			}
+			else if (pieceBoard->isCurveTunel(ghostPos)) {
+				//ghost is in tunnel type 2
+				//so we change the direction of the ghost to the direction that has no wall, and we move 
+				// the ghost
+				setCurveDirection(ghost);
+				moveGhost(ghost);
+			}
+		}
+	}
+}
+
+/*
+* This function gets as input an entity that is assumed to be in a curved tunnel, and
+* sets the direction of the entity to the direction that doesn't have a wall, in order
+* for the entity to keep moving
+*/
+void Board::setCurveDirection(Entity* ghost) {
+	//Assuming we are in a curve tunnel, this function gets as input the entity that is in a
+	// type 2 tunnel, and retrieves the
+	Position currentPosition = ghost->getPosition();
+	Direction currentDirection = ghost->getDirection();
+	Direction adjacent1, adjacent2;
+	/*
+	* If the entity's current direction is up or down, the positions to check are to the left
+	* and to the right, and vice-versa.
+	*/
+	if (currentDirection == Direction::Up || currentDirection == Direction::Down) {
+		adjacent1 = Direction::Left;
+		adjacent2 = Direction::Right;
+	}
+	else {
+		adjacent1 = Direction::Up;
+		adjacent2 = Direction::Down;
+	}
+
+	Position pos1 = currentPosition.translate(adjacent1);
+	//Position pos2 = currentPosition.translate(adjacent2);
+	if (pieceBoard->isWall(pos1)) ghost->setDirection(adjacent2);
+	else ghost->setDirection(adjacent1);
+}
+
+/*
+* If the next position in the current direction isn't a wall, this function
+* moves the entity to the next position.
+*/
+void Board::moveGhost(Entity* ghost) {
+	Direction currentDirection = ghost->getDirection();
+	Position currentPosition = ghost->getPosition();
+	Position newPosition = currentPosition.translate(currentDirection);
+	if (!pieceBoard->isWall(newPosition)) {
+		ghost->setPosition(newPosition);
+	}
 }
