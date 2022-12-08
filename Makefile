@@ -1,10 +1,13 @@
 
 
-bin/prog: obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o
-	g++ -g -o bin/prog obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o
+bin/prog: obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o
+	g++ -g -o bin/prog obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o
 
 obj/Board.o: src/Board.cpp libs/Board.h
 	g++ -Wall -g -c src/Board.cpp -o obj/Board.o
+
+obj/Astar.o: src/Astar.cpp libs/Astar.h
+	g++ -Wall -g -c src/Astar.cpp -o obj/Astar.o
 
 obj/PieceBoard.o: src/PieceBoard.cpp libs/PieceBoard.h
 	g++ -Wall -g -c src/PieceBoard.cpp -o obj/PieceBoard.o

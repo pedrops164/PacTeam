@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "../libs/Position.h"
 
 Position::Position(int x, int y) :
@@ -32,4 +34,34 @@ int Position::getX() {
 
 int Position::getY() {
 	return y;
+}
+
+int Position::manhattanDistance(Position endPos) {
+	return std::abs(endPos.y - y) + std::abs(endPos.x - x);
+}
+
+bool Position::equals(Position pos) {
+	return x == pos.x && y == pos.y;
+}
+
+Direction Position::getDirection(Position newPos) {
+	Position neighbors[4] = {
+			translate(Direction::Up),
+			translate(Direction::Down),
+			translate(Direction::Left),
+			translate(Direction::Right)
+	};
+	if (newPos.equals(neighbors[0])) {
+		return Direction::Up;
+	}
+	else if (newPos.equals(neighbors[1])) {
+		return Direction::Down;
+	}
+	else if (newPos.equals(neighbors[2])) {
+		return Direction::Left;
+	}
+	else if (newPos.equals(neighbors[3])) {
+		return Direction::Right;
+	}
+	return Direction::Null;
 }

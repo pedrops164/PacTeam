@@ -12,6 +12,9 @@ public:
 	Position translate(Direction direction);
 	int getX();
 	int getY();
+	int manhattanDistance(Position endPos);
+	bool equals(Position pos);
+	Direction getDirection(Position newPos);
 };
 
 #endif

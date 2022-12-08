@@ -16,6 +16,7 @@ int main() {
 	while (1) {
 		sleep_for(timeout); //sleep interval
 		game.update();
+		system("cls");
 		game.printBoard();
 	}
 	
