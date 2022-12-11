@@ -6,6 +6,7 @@
 
 #include <string>
 #include "Entity.h"
+#include "Ghost.h"
 #include "PieceBoard.h"
 
 
@@ -15,13 +16,14 @@ private:
 	int height;
 	PieceBoard* pieceBoard;
 	Entity* player;
-	Entity* ghosts[4];
+	Ghost* ghosts[4];
 public:
 	Board(std::string mapPath);
 	void printBoard();
 	void movePlayer();
-	void moveGhost(Entity* ghost);
+	void moveGhost(int ghostId);
 	void changePlayerDirection(Direction newDirection);
+	void changeGhostDirection(int ghostId, Direction newDirection);
 	void updatePlayer();
 	void updateGhosts();
 	void moveCurveTunnel(Entity* ghost);

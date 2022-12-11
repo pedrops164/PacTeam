@@ -103,12 +103,27 @@ bool PieceBoard::isIntersection(Position pos) {
 	return intersectionBoard[getIndex(pos)]; //if true, the position is an intersection
 }
 
+/*
+* Returns true if the given position is a dead end
+* Dead ends are like ####
+*					   M#
+*					 ####
+*/
+bool PieceBoard::isDeadEnd(Position pos) {
+	Position up = pos.translate(Direction::Up);
+	Position down = pos.translate(Direction::Down);
+	Position left = pos.translate(Direction::Left);
+	Position right = pos.translate(Direction::Right);
+	int isWallSum = isWall(up) + isWall(down) + isWall(left) + isWall(right);
+	return isWallSum == 3;
+}
+
 bool PieceBoard::isStraightTunel(Position pos) {
 	Position up = pos.translate(Direction::Up);
 	Position down = pos.translate(Direction::Down);
 	Position left = pos.translate(Direction::Left);
 	Position right = pos.translate(Direction::Right);
-	return !isIntersection(pos) && ((isWall(up) && isWall(down)) || (isWall(left) && isWall(right)));
+	return ((isWall(up) && isWall(down) && !isWall(left) && !isWall(right)) || (isWall(left) && isWall(right) && !isWall(up) && !isWall(down)));
 	//this position is not an intersection, therefore it is a tunnel,
 	//and has two walls, either above and below, or to the right and to the left.
 }

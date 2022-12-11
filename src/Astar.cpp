@@ -1,15 +1,16 @@
-#include <vector>
-
 #include "../libs/Astar.h"
 
-Direction Astar::getOptimalDirection(PieceBoard pb, Position currentPosition, Position endPosition) {
+Direction Astar::getOptimalDirection(PieceBoard* pb, Position currentPosition, Position endPosition) {
 	std::vector<Node*> open, closed;
+	open.reserve(100);
+	closed.reserve(100);
 	Node* currentNode = nullptr;
 	int currentNodeIndex = 0;
 
 	open.push_back(new Node(currentPosition));
 
 	while (!open.empty()) {
+		currentNode = open[0];
 		for (int i = 0; i < open.size(); i++) {
 			if (open[i]->getFcost() <= currentNode->getFcost()) {
 				currentNode = open[i];
@@ -30,7 +31,7 @@ Direction Astar::getOptimalDirection(PieceBoard pb, Position currentPosition, Po
 			Position currentNeighbor = neighbors[i];
 			//if the current neighbor position is a wall, or if he's in the closed list,
 			//go to the next neighbor
-			if (pb.isWall(currentNeighbor) || getNode(closed, currentNeighbor)) continue;
+			if (pb->isWall(currentNeighbor) || getNode(closed, currentNeighbor)) continue;
 
 			int cost = currentNode->gcost + 1;
 			

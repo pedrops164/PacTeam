@@ -8,6 +8,12 @@ Position::Position(int x, int y) :
 {
 }
 
+Position::Position() :
+	x(-1),
+	y(-1)
+{
+}
+
 Position Position::translate(Direction direction) {
 	int new_x = x;
 	int new_y = y;
@@ -23,6 +29,8 @@ Position Position::translate(Direction direction) {
 		break;
 	case Left:
 		new_x -= 1;
+		break;
+	case Null:
 		break;
 	}
 	return Position(new_x, new_y);

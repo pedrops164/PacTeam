@@ -1,7 +1,7 @@
 
 
-bin/prog: obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o
-	g++ -g -o bin/prog obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o
+bin/prog: obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o
+	g++ -g -o bin/prog obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o
 
 obj/Board.o: src/Board.cpp libs/Board.h
 	g++ -Wall -g -c src/Board.cpp -o obj/Board.o
@@ -11,6 +11,9 @@ obj/Astar.o: src/Astar.cpp libs/Astar.h
 
 obj/PieceBoard.o: src/PieceBoard.cpp libs/PieceBoard.h
 	g++ -Wall -g -c src/PieceBoard.cpp -o obj/PieceBoard.o
+
+obj/Direction.o: src/Direction.cpp libs/Direction.h
+	g++ -Wall -g -c src/Direction.cpp -o obj/Direction.o
 
 obj/Entity.o: src/Entity.cpp libs/Entity.h
 	g++ -Wall -g -c src/Entity.cpp -o obj/Entity.o

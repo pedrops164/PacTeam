@@ -5,6 +5,7 @@
 #include "Direction.h"
 #include "PieceBoard.h"
 #include "Position.h"
+#include <vector>
 
 namespace Astar {
 	struct Node {
@@ -15,7 +16,7 @@ namespace Astar {
 		int getFcost();
 	};
 
-	Direction getOptimalDirection(PieceBoard pb, Position currentPosition, Position endPosition);
+	Direction getOptimalDirection(PieceBoard* pb, Position currentPosition, Position endPosition);
 
 	Node* getNode(std::vector<Node*> nodeList, Position position);
 }

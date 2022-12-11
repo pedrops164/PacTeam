@@ -26,6 +26,7 @@ public:
 	bool isWall(Position position);
 	void generateIntersectionBoard();
 	bool isIntersection(Position pos);
+	bool isDeadEnd(Position pos);
 	bool isStraightTunel(Position pos);
 	bool isCurveTunel(Position pos);
 };

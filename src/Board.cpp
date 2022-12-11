@@ -44,7 +44,7 @@ Board::Board(string path) {
 			} else if (currentLine[i] == 'M') {
 				//board[currentIndex] = Piece::Ghost1;
 				pieceBoard->setEmpty(position);
-				Entity* ghost = new Ghost(currentGhostId, 2, Position(i, j), Direction::Up);
+				Ghost* ghost = new Ghost(currentGhostId, 2, Position(i, j), Direction::Up);
 				ghosts[currentGhostId] = ghost;
 				currentGhostId++;
 			} else if (currentLine[i] == '{') {
@@ -94,11 +94,28 @@ void Board::movePlayer() {
 	}
 }
 
+/*
+* If the next position isn't a wall, moves the ghost in the current direction
+*/
+void Board::moveGhost(int ghostId) {
+	Ghost* ghost = ghosts[ghostId];
+	Direction currentDirection = ghost->getDirection();
+	Position currentPosition = ghost->getPosition();
+	Position newPosition = currentPosition.translate(currentDirection);
+	if (!pieceBoard->isWall(newPosition)) {
+		ghost->setPosition(newPosition);
+	}
+}
+
 void Board::changePlayerDirection(Direction newDirection) {
 	Position nextPosition = player->getPosition().translate(newDirection);
 	if (!pieceBoard->isWall(nextPosition)) {
 		player->setDirection(newDirection);
 	}
+}
+
+void Board::changeGhostDirection(int ghostId, Direction newDirection) {
+	ghosts[ghostId]->setDirection(newDirection);
 }
 
 /*
@@ -128,8 +145,8 @@ void Board::updatePlayer() {
 */
 void Board::updateGhosts() {
 
-	for (int i = 0; i < 4; i++) {
-		Entity* ghost = ghosts[i];
+	for (int ghostId = 0; ghostId < 4; ghostId++) {
+		Ghost* ghost = ghosts[ghostId];
 		Position ghostPos = ghost->getPosition();
 		/*
 		* Whatever the case is, the ghost can't go to the square
@@ -140,9 +157,15 @@ void Board::updateGhosts() {
 			* ghost is in an intersection
 			* intersections have 3 or more surrounding squares 
 			*/
-
-		}
-		else {
+			Direction newDirection = ghost->getNextDirection(pieceBoard, player);
+			ghost->setDirection(newDirection);
+			moveGhost(ghostId);
+		} else if (pieceBoard->isDeadEnd(ghostPos)) {
+			/*
+			* In case of dead end, reverse the direction of the ghost
+			*/
+			ghost->setDirection(opposite(ghost->getDirection()));
+		} else {
 			/*
 			* ghost is in a tunel
 			*
@@ -153,14 +176,14 @@ void Board::updateGhosts() {
 			*/
 			if (pieceBoard->isStraightTunel(ghostPos)) {
 				//ghost is in tunnel type 1 (straight line), so we just move the ghost
-				moveGhost(ghost);
+				moveGhost(ghostId);
 			}
 			else if (pieceBoard->isCurveTunel(ghostPos)) {
 				//ghost is in tunnel type 2
 				//so we change the direction of the ghost to the direction that has no wall, and we move 
 				// the ghost
 				setCurveDirection(ghost);
-				moveGhost(ghost);
+				moveGhost(ghostId);
 			}
 		}
 	}
@@ -195,17 +218,4 @@ void Board::setCurveDirection(Entity* ghost) {
 	//Position pos2 = currentPosition.translate(adjacent2);
 	if (pieceBoard->isWall(pos1)) ghost->setDirection(adjacent2);
 	else ghost->setDirection(adjacent1);
-}
-
-/*
-* If the next position in the current direction isn't a wall, this function
-* moves the entity to the next position.
-*/
-void Board::moveGhost(Entity* ghost) {
-	Direction currentDirection = ghost->getDirection();
-	Position currentPosition = ghost->getPosition();
-	Position newPosition = currentPosition.translate(currentDirection);
-	if (!pieceBoard->isWall(newPosition)) {
-		ghost->setPosition(newPosition);
-	}
 }
