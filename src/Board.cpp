@@ -44,7 +44,7 @@ Board::Board(string path) {
 			} else if (currentLine[i] == 'M') {
 				//board[currentIndex] = Piece::Ghost1;
 				pieceBoard->setEmpty(position);
-				Ghost* ghost = new Ghost(currentGhostId, 2, Position(i, j), Direction::Up);
+				Ghost* ghost = new Ghost(currentGhostId, 2, Position(i, j), Direction::Right);
 				ghosts[currentGhostId] = ghost;
 				currentGhostId++;
 			} else if (currentLine[i] == '{') {

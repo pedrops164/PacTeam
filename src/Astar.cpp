@@ -1,4 +1,5 @@
 #include "../libs/Astar.h"
+#include <iostream>
 
 Direction Astar::getOptimalDirection(PieceBoard* pb, Position currentPosition, Position endPosition) {
 	std::vector<Node*> open, closed;
@@ -10,25 +11,36 @@ Direction Astar::getOptimalDirection(PieceBoard* pb, Position currentPosition, P
 	open.push_back(new Node(currentPosition));
 
 	while (!open.empty()) {
-		currentNode = open[0];
-		for (int i = 0; i < open.size(); i++) {
-			if (open[i]->getFcost() <= currentNode->getFcost()) {
-				currentNode = open[i];
-				currentNodeIndex = i;
+		auto current_it = open.begin();
+		currentNode = *current_it;
+		for (auto it = open.begin(); it != open.end(); it++) {
+			auto node = *it;
+			if (node->getFcost() <= currentNode->getFcost()) {
+				currentNode = node;
+				//currentNodeIndex = i;
+				current_it = it;
 			}
 		}
-		open.erase(open.begin() + currentNodeIndex);
-		closed.push_back(currentNode);
+		//currentNode = open[0];
+		//for (int i = 0; i < open.size(); i++) {
+		//	if (open[i]->getFcost() <= currentNode->getFcost()) {
+		//		currentNode = open[i];
+		//		currentNodeIndex = i;
+		//	}
+		//}
 		if (endPosition.equals(currentNode->pos)) break;
 
-		Position neighbors[4] = {
-			currentNode->pos.translate(Direction::Up),
-			currentNode->pos.translate(Direction::Down),
-			currentNode->pos.translate(Direction::Left),
-			currentNode->pos.translate(Direction::Right)
+		open.erase(current_it);
+		closed.push_back(currentNode);
+
+		Direction directions[4] = {
+			Direction::Up,
+			Direction::Down,
+			Direction::Left,
+			Direction::Right
 		};
 		for (int i = 0; i < 4; i++) {
-			Position currentNeighbor = neighbors[i];
+			Position currentNeighbor = (currentNode->pos).translate(directions[i]);
 			//if the current neighbor position is a wall, or if he's in the closed list,
 			//go to the next neighbor
 			if (pb->isWall(currentNeighbor) || getNode(closed, currentNeighbor)) continue;
@@ -51,7 +63,7 @@ Direction Astar::getOptimalDirection(PieceBoard* pb, Position currentPosition, P
 	}
 	std::vector<Position> positionList;
 	while (currentNode != nullptr) {
-		positionList.push_back(currentNode->pos);
+		positionList.insert(positionList.begin(), currentNode->pos);
 		currentNode = currentNode->parent;
 	}
 	return positionList[0].getDirection(positionList[1]);
@@ -74,9 +86,9 @@ int Astar::Node::getFcost() {
 	return hcost + gcost;
 }
 
-Astar::Node::Node(Position position, Node* parent):
-	pos(position)
+Astar::Node::Node(Position position, Node* parent_)
 {
+	pos = position;
 	hcost = gcost = 0;
-	parent = parent;
+	parent = parent_;
 }

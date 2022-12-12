@@ -14,6 +14,10 @@ Position::Position() :
 {
 }
 
+bool Position::operator == (const Position& coords) {
+	return (x == coords.x && y == coords.y);
+}
+
 Position Position::translate(Direction direction) {
 	int new_x = x;
 	int new_y = y;
@@ -49,7 +53,7 @@ int Position::manhattanDistance(Position endPos) {
 }
 
 bool Position::equals(Position pos) {
-	return x == pos.x && y == pos.y;
+	return (x == pos.x) && (y == pos.y);
 }
 
 Direction Position::getDirection(Position newPos) {

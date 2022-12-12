@@ -12,7 +12,7 @@ namespace Astar {
 		Position pos;
 		int hcost, gcost;
 		Node* parent;
-		Node(Position position, Node* parent = nullptr);
+		Node(Position position, Node* parent_ = nullptr);
 		int getFcost();
 	};
 

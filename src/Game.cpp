@@ -26,9 +26,7 @@ void Game::update() {
 	}
 	if (totalTicks % ticksPerMoveGhosts == 0) {
 		//time to update Ghosts
-		std::cout << "teste" << std::endl;
 		board.updateGhosts();
-		std::cout << "teste1" << std::endl;
 	}
 	
 	totalTicks += 1;
