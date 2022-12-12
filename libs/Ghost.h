@@ -4,6 +4,11 @@
 
 #include "Entity.h"
 #include "PieceBoard.h"
+#include <chrono>
+
+#define FRIGHTENED_DURATION 3.0
+#define SCATTER_DURATION 7.0
+#define CHASE_DURATION 20.0
 
 enum Mode {Chase, Scatter, Frightened};
 
@@ -16,11 +21,18 @@ private:
 	int ghostId;
 	Mode mode;
 	//position of the target of the ghosts when they're in scatter mode
-	Position scatterTarget; 
+	std::chrono::time_point<std::chrono::system_clock> lastScatterTime, lastFrightenedTime, lastChaseTime;
 public:
 	Ghost(int gId, int ticksPerMove, Position pos, Direction direction, Position scatter);
 	Direction getNextDirection(PieceBoard* pb, Entity* pacman);
 	virtual Position getTargetPosition(Entity* pacman) = 0;
+	void checkMode();
+	void frighten();
+	bool isChaseMode();
+	bool isFrightenedMode();
+	bool isScatterMode();
+protected:
+	Position scatterTarget;
 };
 
 #endif

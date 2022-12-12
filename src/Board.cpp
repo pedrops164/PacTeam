@@ -90,6 +90,11 @@ void Board::movePlayer() {
 	Position newPosition = currentPosition.translate(currentDirection);
 	if (!pieceBoard->isWall(newPosition)) {
 		//add the point system later
+		if (pieceBoard->isBigFood(newPosition)) {
+			for (int i = 0; i < 4; i++) {
+				ghosts[i]->frighten();
+			}
+		}
 		pieceBoard->setEmpty(newPosition);
 		player->setPosition(newPosition);
 	}
@@ -148,6 +153,7 @@ void Board::updateGhosts() {
 
 	for (int ghostId = 0; ghostId < 4; ghostId++) {
 		Ghost* ghost = ghosts[ghostId];
+		ghost->checkMode();
 		Position ghostPos = ghost->getPosition();
 		/*
 		* Whatever the case is, the ghost can't go to the square

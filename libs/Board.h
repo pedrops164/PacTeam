@@ -9,7 +9,6 @@
 #include "Ghost.h"
 #include "PieceBoard.h"
 
-
 class Board {
 private:
 	int width;

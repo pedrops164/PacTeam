@@ -5,6 +5,13 @@ DefaultGhost::DefaultGhost(int gId, int ticksPerMove, Position pos, Direction di
 }
 
 Position DefaultGhost::getTargetPosition(Entity* pacman) {
-	return pacman->getPosition();
+	if (isChaseMode()) {
+		return pacman->getPosition();
+	}
+	else if (isScatterMode()) {
+		return scatterTarget;
+	}
+	return Position(-1, -1);
+	//the mode is scatter, this function shouldnt have been called
 }
 
