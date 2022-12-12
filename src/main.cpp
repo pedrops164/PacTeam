@@ -13,11 +13,13 @@ int main() {
 	Current solution only works for windows! (the GetAsyncKeyState function)
 	We should find an alternative to work on linux too.
 	*/
+	game.printBoard();
 	while (1) {
 		sleep_for(timeout); //sleep interval
 		game.update();
 		system("cls");
 		game.printBoard();
+		
 	}
 	
 	return 0;

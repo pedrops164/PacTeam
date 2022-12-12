@@ -24,6 +24,7 @@ public:
 	void setEmpty(Position pos);
 	char* getRepresentation();
 	bool isWall(Position position);
+	bool isInvalid(Position position);
 	void generateIntersectionBoard();
 	bool isIntersection(Position pos);
 	bool isDeadEnd(Position pos);

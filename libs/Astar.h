@@ -16,7 +16,7 @@ namespace Astar {
 		int getFcost();
 	};
 
-	Direction getOptimalDirection(PieceBoard* pb, Position currentPosition, Position endPosition);
+	Direction getOptimalDirection(PieceBoard* pb, Position currentPosition, Position endPosition, Position invalidPosition = Position(-1,-1));
 
 	Node* getNode(std::vector<Node*> nodeList, Position position);
 }

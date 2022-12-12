@@ -54,6 +54,12 @@ bool PieceBoard::isWall(Position position) {
 	return board[index] == Wall;
 }
 
+bool PieceBoard::isInvalid(Position position) {
+	int x = position.getX();
+	int y = position.getY();
+	return isWall(position) || x > width || x < 0 || y > height || y < 0;
+}
+
 void PieceBoard::generateIntersectionBoard() {
 	intersectionBoard = (bool*)malloc(width * height * sizeof(bool));
 	int currentIndex = 0;

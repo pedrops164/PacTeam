@@ -1,7 +1,12 @@
 #include "../libs/Astar.h"
 #include <iostream>
 
-Direction Astar::getOptimalDirection(PieceBoard* pb, Position currentPosition, Position endPosition) {
+/*
+* This function receives the current state of the board, the start position,
+* the end position, and optionally, a position the optimal path can't go through (invalidPosition)
+* this function uses the A* algorithm to calculate the next best direction to take
+*/
+Direction Astar::getOptimalDirection(PieceBoard* pb, Position currentPosition, Position endPosition, Position invalidPosition) {
 	std::vector<Node*> open, closed;
 	open.reserve(100);
 	closed.reserve(100);
@@ -43,7 +48,7 @@ Direction Astar::getOptimalDirection(PieceBoard* pb, Position currentPosition, P
 			Position currentNeighbor = (currentNode->pos).translate(directions[i]);
 			//if the current neighbor position is a wall, or if he's in the closed list,
 			//go to the next neighbor
-			if (pb->isWall(currentNeighbor) || getNode(closed, currentNeighbor)) continue;
+			if (pb->isInvalid(currentNeighbor) || currentNeighbor.equals(invalidPosition) || getNode(closed, currentNeighbor)) continue;
 
 			int cost = currentNode->gcost + 1;
 			
@@ -61,7 +66,25 @@ Direction Astar::getOptimalDirection(PieceBoard* pb, Position currentPosition, P
 			}
 		}
 	}
+	
 	std::vector<Position> positionList;
+	if (open.empty()) {
+		/*
+		* In case the open vector is empty, it means it didn't find the end position.
+		* Therefore, we will set currentNode to the node that has the least manhattan distance
+		* to the end position, and we will backtrace the path from there
+		*/
+		auto current_it = closed.begin();
+		currentNode = *current_it;
+		for (auto it = closed.begin(); it != closed.end(); it++) {
+			auto node = *it;
+			if ((node->pos).manhattanDistance(endPosition) < (currentNode->pos).manhattanDistance(endPosition)) {
+				currentNode = node;
+				//currentNodeIndex = i;
+				current_it = it;
+			}
+		}
+	}
 	while (currentNode != nullptr) {
 		positionList.insert(positionList.begin(), currentNode->pos);
 		currentNode = currentNode->parent;

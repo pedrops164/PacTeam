@@ -1,6 +1,7 @@
 #include "../libs/Board.h"
 #include "../libs/PieceBoard.h"
 #include "../libs/Ghost.h"
+#include "../libs/DefaultGhost.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
@@ -44,7 +45,7 @@ Board::Board(string path) {
 			} else if (currentLine[i] == 'M') {
 				//board[currentIndex] = Piece::Ghost1;
 				pieceBoard->setEmpty(position);
-				Ghost* ghost = new Ghost(currentGhostId, 2, Position(i, j), Direction::Right);
+				Ghost* ghost = new DefaultGhost(currentGhostId, 2, Position(i, j), Direction::Right);
 				ghosts[currentGhostId] = ghost;
 				currentGhostId++;
 			} else if (currentLine[i] == '{') {
@@ -165,6 +166,7 @@ void Board::updateGhosts() {
 			* In case of dead end, reverse the direction of the ghost
 			*/
 			ghost->setDirection(opposite(ghost->getDirection()));
+			moveGhost(ghostId);
 		} else {
 			/*
 			* ghost is in a tunel
