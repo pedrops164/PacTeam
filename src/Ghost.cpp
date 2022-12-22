@@ -37,12 +37,14 @@ void Ghost::checkMode() {
 		if (elapsed_seconds.count() >= CHASE_DURATION) {
 			mode = Mode::Scatter;
 			lastScatterTime = current_timer;
+			reverseDirection();
 		}
 	} else if (mode == Mode::Scatter) {
 		std::chrono::duration<double> elapsed_seconds = current_timer - lastScatterTime;
 		if (elapsed_seconds.count() >= SCATTER_DURATION) {
 			mode = Mode::Chase;
 			lastChaseTime = current_timer;
+			reverseDirection();
 		}
 	}
 	else if (mode == Mode::Frightened) {
@@ -72,6 +74,7 @@ void Ghost::checkMode() {
 void Ghost::frighten() {
 	mode = Mode::Frightened;
 	lastFrightenedTime = std::chrono::system_clock::now();
+	reverseDirection();
 }
 
 bool Ghost::isChaseMode() {
@@ -84,4 +87,8 @@ bool Ghost::isFrightenedMode() {
 
 bool Ghost::isScatterMode() {
 	return mode == Mode::Scatter;
+}
+
+void Ghost::reverseDirection() {
+	setDirection(opposite(getDirection()));
 }

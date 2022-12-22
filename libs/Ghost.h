@@ -31,6 +31,7 @@ public:
 	bool isChaseMode();
 	bool isFrightenedMode();
 	bool isScatterMode();
+	void reverseDirection();
 protected:
 	Position scatterTarget;
 };
