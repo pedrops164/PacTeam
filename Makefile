@@ -1,7 +1,7 @@
 
 
-bin/prog: obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o obj/DefaultGhost.o
-	g++ -g -o bin/prog obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o obj/DefaultGhost.o
+bin/prog: obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o obj/DefaultGhost.o obj/PacmanAgent.o obj/PacmanKeyBoardAgent.o
+	g++ -g -o bin/prog obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o obj/DefaultGhost.o obj/PacmanAgent.o obj/PacmanKeyBoardAgent.o
 
 obj/Board.o: src/Board.cpp libs/Board.h
 	g++ -Wall -g -c src/Board.cpp -o obj/Board.o
@@ -29,6 +29,12 @@ obj/Position.o: src/Position.cpp libs/Position.h
 
 obj/Game.o: src/Game.cpp libs/Game.h
 	g++ -Wall -g -c src/Game.cpp -o obj/Game.o
+
+obj/PacmanAgent.o: src/PacmanAgent.cpp libs/PacmanAgent.h
+	g++ -Wall -g -c src/PacmanAgent.cpp -o obj/PacmanAgent.o
+
+obj/PacmanKeyBoardAgent.o: src/PacmanKeyBoardAgent.cpp libs/PacmanKeyBoardAgent.h
+	g++ -Wall -g -c src/PacmanKeyBoardAgent.cpp -o obj/PacmanKeyBoardAgent.o
 
 obj/main.o: src/main.cpp
 	g++ -Wall -g -c src/main.cpp -o obj/main.o

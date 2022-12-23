@@ -125,28 +125,6 @@ void Board::changeGhostDirection(int ghostId, Direction newDirection) {
 }
 
 /*
-* Checks if an arrow key was clicked since last tick, and if so changes the direction accordingly
-* Then moves the player
-*/
-void Board::updatePlayer() {
-	if (GetAsyncKeyState(VK_UP) & 1) {
-		//Up arrow was clicked since last time
-		//player->setDirection(Direction::Up);
-		changePlayerDirection(Direction::Up);
-	}
-	else if (GetAsyncKeyState(VK_DOWN) & 1) {
-		changePlayerDirection(Direction::Down);
-	}
-	else if (GetAsyncKeyState(VK_RIGHT) & 1) {
-		changePlayerDirection(Direction::Right);
-	}
-	else if (GetAsyncKeyState(VK_LEFT) & 1) {
-		changePlayerDirection(Direction::Left);
-	}
-	movePlayer();
-}
-
-/*
 * Updates the position of every ghost
 */
 void Board::updateGhosts() {

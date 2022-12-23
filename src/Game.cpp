@@ -2,9 +2,10 @@
 #include <iostream>
 
 
-Game::Game(std::string mapPath, int tPS, int ticksPlayer, int ticksGhosts) :
-	board(Board(mapPath)),
-	ticksPerSecond(tPS)
+Game::Game(std::string mapPath, int tPS, int ticksPlayer, int ticksGhosts, PacmanAgent* _pacmanAgent) :
+	board(new Board(mapPath)),
+	ticksPerSecond(tPS),
+	pacmanAgent(_pacmanAgent)
 {
 	ticksPerMovePlayer = ticksPlayer;
 	ticksPerMoveGhosts = ticksGhosts;
@@ -12,21 +13,18 @@ Game::Game(std::string mapPath, int tPS, int ticksPlayer, int ticksGhosts) :
 }
 
 void Game::printBoard() {
-	board.printBoard();
-}
-
-void Game::movePlayer() {
-	board.movePlayer();
+	board->printBoard();
 }
 
 void Game::update() {
 	if (totalTicks % ticksPerMovePlayer == 0) {
 		//time to update Player
-		board.updatePlayer();
+		//board->updatePlayer();
+		pacmanAgent->updateState(board);
 	}
 	if (totalTicks % ticksPerMoveGhosts == 0) {
 		//time to update Ghosts
-		board.updateGhosts();
+		board->updateGhosts();
 	}
 	
 	totalTicks += 1;
