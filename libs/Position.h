@@ -17,6 +17,8 @@ public:
 	bool equals(Position pos);
 	Direction getDirection(Position newPos);
 	bool operator == (const Position& coords);
+	void setX(int x, Position pos);
+	double distanceCalculate(double x1, double y1, double x2, double y2);
 };
 
 /*

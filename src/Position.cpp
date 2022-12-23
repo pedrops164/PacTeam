@@ -77,3 +77,20 @@ Direction Position::getDirection(Position newPos) {
 	}
 	return Direction::Null;
 }
+
+void Position::setX(int x, Position pos)
+{
+	pos.x = x;
+}
+
+double distanceCalculate(double x1, double y1, double x2, double y2)
+{
+	double x = x1 - x2; //calculating number to square in next step
+	double y = y1 - y2;
+	double dist;
+
+	dist = pow(x, 2) + pow(y, 2);       //calculating Euclidean distance
+	dist = sqrt(dist);                  
+
+	return dist;
+}

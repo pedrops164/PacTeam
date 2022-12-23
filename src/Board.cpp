@@ -1,7 +1,9 @@
 #include "../libs/Board.h"
 #include "../libs/PieceBoard.h"
 #include "../libs/Ghost.h"
-#include "../libs/DefaultGhost.h"
+#include "../libs/RedGhost.h"
+#include "../libs/PinkGhost.h"
+#include "../libs/BlueGhost.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
@@ -42,12 +44,32 @@ Board::Board(string path) {
 				pieceBoard->setSmallFood(position);
 			} else if (currentLine[i] == ' ') {
 				pieceBoard->setEmpty(position);
-			} else if (currentLine[i] == 'M') {
+			} else if (currentLine[i] == 'R') {
 				//board[currentIndex] = Piece::Ghost1;
 				pieceBoard->setEmpty(position);
-				Ghost* ghost = new DefaultGhost(currentGhostId, 2, Position(i, j), Direction::Right);
+				Ghost* ghost = new RedGhost(currentGhostId, 2, Position(i, j), Direction::Right);
 				ghosts[currentGhostId] = ghost;
 				currentGhostId++;
+			} else if (currentLine[i] == 'P') {
+				//board[currentIndex] = Piece::Ghost1;
+				pieceBoard->setEmpty(position);
+				Ghost* ghost = new PinkGhost(currentGhostId, 2, Position(i, j), Direction::Right);
+				ghosts[currentGhostId] = ghost;
+				currentGhostId++;
+			/**} else if (currentLine[i] == 'B') {
+				//board[currentIndex] = Piece::Ghost1;
+				pieceBoard->setEmpty(position);
+				Ghost* ghost = new BlueGhost(currentGhostId, 2, Position(i, j), Direction::Right);
+				ghosts[currentGhostId] = ghost;
+				currentGhostId++;
+			
+				} else if (currentLine[i] == 'O') {
+				//board[currentIndex] = Piece::Ghost1;
+				pieceBoard->setEmpty(position);
+				Ghost* ghost = new OrangeGhost(currentGhostId, 2, Position(i, j), Direction::Right);
+				ghosts[currentGhostId] = ghost;
+				currentGhostId++;
+			*/
 			} else if (currentLine[i] == '{') {
 				//board[currentIndex] = Piece::Player;
 				pieceBoard->setEmpty(position);
@@ -65,10 +87,15 @@ void Board::printBoard() {
 	Position playerPosition = player->getPosition ();
 	representation[pieceBoard->getIndex(playerPosition)] = '{'; //change this later
 
-	for (int j = 0; j < 4; j++) {
+	for (int j = 0; j < 4; j++) 
+	{
 		Position ghostPosition = ghosts[j]->getPosition();
-		representation[pieceBoard->getIndex(ghostPosition)] = 'M'; //change this later
+		if (j==0) {representation[pieceBoard->getIndex(ghostPosition)] = 'R';}
+		else if (j==1) {representation[pieceBoard->getIndex(ghostPosition)] = 'B';}
+		else if (j==2) {representation[pieceBoard->getIndex(ghostPosition)] = 'O';}
+		else if (j==3) {representation[pieceBoard->getIndex(ghostPosition)] = 'P';}
 	}
+	
 
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {

@@ -40,3 +40,11 @@ void Entity::setDirection(Direction newDirection) {
 void Entity::print() {
 	std::cout << id << "," << nLives << ",(" << pos.getX() << "," << pos.getY() << ")" << std::endl;
 }
+
+
+Position Entity::getPinkTarget()
+{
+	int newx = pos.getX()+4;
+	pos.setX(newx, pos);
+	return pos;
+}

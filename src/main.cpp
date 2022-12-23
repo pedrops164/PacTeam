@@ -9,7 +9,7 @@ int main() {
 	using namespace std::chrono; // nanoseconds, system_clock, seconds
 	int ticksPerSecond = 5;
 	milliseconds timeout((int)((1.0 / ticksPerSecond) * 1000));
-	Game game = Game("../maps/0.txt", ticksPerSecond, 1, 3, new PacmanKeyBoardAgent());
+	Game game = Game("maps/0.txt", ticksPerSecond, 1, 3, new PacmanKeyBoardAgent());
 	/*
 	Current solution only works for windows! (the GetAsyncKeyState function)
 	We should find an alternative to work on linux too.
