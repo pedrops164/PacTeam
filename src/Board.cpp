@@ -16,6 +16,16 @@
 
 using namespace std;
 
+Board::Board(const Board& board) {
+	width = board.width;
+	height = board.height;
+	pieceBoard = board.pieceBoard->clone();
+	player = board.player->clone();
+	for (int i = 0; i < 4; i++) {
+		ghosts[i] = board.ghosts[i]->clone();
+	}
+}
+
 Board::Board(string path) {
 	int currentGhostId = 0;
 	ifstream map(path); //input file stream from path to the map text file
@@ -231,4 +241,8 @@ void Board::setCurveDirection(Entity* ghost) {
 	//Position pos2 = currentPosition.translate(adjacent2);
 	if (pieceBoard->isWall(pos1)) ghost->setDirection(adjacent2);
 	else ghost->setDirection(adjacent1);
+}
+
+Board* Board::clone() {
+	return new Board(*this);
 }

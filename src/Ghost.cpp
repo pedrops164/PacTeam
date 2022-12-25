@@ -2,6 +2,14 @@
 #include "../libs/Astar.h"
 #include <iostream>
 
+Ghost::Ghost(const Ghost& gh) : Entity(gh) {
+	ghostId = gh.ghostId;
+	mode = gh.mode;
+	lastScatterTime = gh.lastScatterTime;
+	lastFrightenedTime = gh.lastFrightenedTime;
+	lastChaseTime = gh.lastChaseTime;
+}
+
 Ghost::Ghost(int gId, int ticksPerMove, Position pos, Direction direction, Position scatter)
 	:Entity(1, ticksPerMove, pos, direction) {
 	ghostId = gId;
@@ -91,4 +99,8 @@ bool Ghost::isScatterMode() {
 
 void Ghost::reverseDirection() {
 	setDirection(opposite(getDirection()));
+}
+
+Ghost* Ghost::clone() {
+	return nullptr;
 }

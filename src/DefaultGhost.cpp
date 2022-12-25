@@ -1,5 +1,9 @@
 #include "../libs/DefaultGhost.h"
 
+DefaultGhost::DefaultGhost(const DefaultGhost& g) : Ghost(g) {
+
+}
+
 DefaultGhost::DefaultGhost(int gId, int ticksPerMove, Position pos, Direction direction) 
 	:Ghost(gId, ticksPerMove, pos, direction, Position(0,0)) {
 }
@@ -15,3 +19,6 @@ Position DefaultGhost::getTargetPosition(Entity* pacman) {
 	//the mode is scatter, this function shouldnt have been called
 }
 
+Ghost* DefaultGhost::clone() {
+	return new DefaultGhost(*this);
+}

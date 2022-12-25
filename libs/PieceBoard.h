@@ -16,6 +16,7 @@ private:
 	Piece getPiece(Position pos);
 	void setPiece(Position pos, Piece piece);
 public:
+	PieceBoard(const PieceBoard& pb);
 	PieceBoard(int w, int h);
 	int getIndex(Position position);
 	void setWall(Position pos);
@@ -31,6 +32,7 @@ public:
 	bool isDeadEnd(Position pos);
 	bool isStraightTunel(Position pos);
 	bool isCurveTunel(Position pos);
+	PieceBoard* clone();
 };
 
 

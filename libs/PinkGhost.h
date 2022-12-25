@@ -2,7 +2,9 @@
 
 class PinkGhost: public Ghost
 {
-    public:
+public:
+    PinkGhost(const PinkGhost& g);
     PinkGhost(int gId, int ticksPerMove, Position position, Direction direction);
     Position getTargetPosition(Entity* pacman);
+    Ghost* clone();
 };

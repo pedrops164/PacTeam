@@ -17,6 +17,7 @@ private:
 	Entity* player;
 	Ghost* ghosts[4];
 public:
+	Board(const Board& board);
 	Board(std::string mapPath);
 	void printBoard();
 	void movePlayer();
@@ -27,6 +28,7 @@ public:
 	void updateGhosts();
 	void moveCurveTunnel(Entity* ghost);
 	void setCurveDirection(Entity* ghost);
+	Board* clone();
 };
 
 #endif

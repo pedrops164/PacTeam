@@ -1,5 +1,9 @@
 #include "../libs/PinkGhost.h"
 
+PinkGhost::PinkGhost(const PinkGhost& g) : Ghost(g) {
+
+}
+
 PinkGhost::PinkGhost(int gId, int ticksPerMove, Position position, Direction direction) 
 	:Ghost(gId, ticksPerMove, position, direction, Position(0,0)) 
     {
@@ -19,3 +23,6 @@ Position PinkGhost::getTargetPosition(Entity* pacman)
 	//the mode is scatter, this function shouldnt have been called
 }
 
+Ghost* PinkGhost::clone() {
+	return new PinkGhost(*this);
+}

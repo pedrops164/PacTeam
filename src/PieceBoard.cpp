@@ -2,6 +2,16 @@
 
 #include <iostream>
 
+PieceBoard::PieceBoard(const PieceBoard& pb) : pieceRepresentation{ '#', '.', 'o', ' ' } {
+	width = pb.width;
+	height = pb.height;
+	int size = width * height;
+	board = (Piece*)malloc(size * sizeof(Piece));
+	for (int i = 0; i < size; i++) {
+		board[i] = pb.board[i];
+	}
+	generateIntersectionBoard();
+}
 
 PieceBoard::PieceBoard(int w, int h) : pieceRepresentation{ '#', '.', 'o', ' ' } {
 	width = w;
@@ -147,3 +157,6 @@ bool PieceBoard::isCurveTunel(Position pos) {
 	return !isIntersection(pos) && (!(isWall(up) && isWall(down)) && !(isWall(left) && isWall(right)));
 }
 
+PieceBoard* PieceBoard::clone() {
+	return new PieceBoard(*this);
+}

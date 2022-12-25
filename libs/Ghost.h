@@ -23,6 +23,7 @@ private:
 	//position of the target of the ghosts when they're in scatter mode
 	std::chrono::time_point<std::chrono::system_clock> lastScatterTime, lastFrightenedTime, lastChaseTime;
 public:
+	Ghost(const Ghost& gh);
 	Ghost(int gId, int ticksPerMove, Position pos, Direction direction, Position scatter);
 	Direction getNextDirection(PieceBoard* pb, Entity* pacman);
 	virtual Position getTargetPosition(Entity* pacman) = 0;
@@ -32,6 +33,7 @@ public:
 	bool isFrightenedMode();
 	bool isScatterMode();
 	void reverseDirection();
+	Ghost* clone(); //maybe needs change
 protected:
 	Position scatterTarget;
 };

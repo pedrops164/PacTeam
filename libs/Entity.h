@@ -13,6 +13,7 @@ private:
 	Position pos;
 	Direction direction;
 public:
+	Entity(const Entity& ent);
 	Entity(int nLives, int ticksPerMove, Position pos, Direction direction);
 	Entity();
 	int getId();
@@ -23,6 +24,7 @@ public:
 	void setPosition(Position position);
 	void setDirection(Direction newDirection);
 	void print();
+	Entity* clone();
 };
 
 #endif

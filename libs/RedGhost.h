@@ -2,7 +2,9 @@
 
 class RedGhost: public Ghost
 {
-    public:
+public:
+    RedGhost(const RedGhost& g);
     RedGhost(int gId, int ticksPerMove, Position position, Direction direction);
     Position getTargetPosition(Entity* pacman);
+    Ghost* clone();
 };
