@@ -52,10 +52,61 @@ void Entity::print() {
 
 Position Entity::getPinkTarget()
 {
-	int newx = pos.getX()+4;
-	pos.setX(newx, pos);
-	return pos;
+	int newx = pos.getX(), newy = pos.getY();
+	Position newpos;
+	if(direction == 0) 
+	{
+		newy = newy - 4;
+		newpos = Position(newx,newy);
+	}
+	else if(direction == 1)
+	{
+		newy = newy + 4;
+		newpos = Position(newx,newy);
+	}
+	else if(direction == 2)
+	{
+		newx = newx + 4;
+		newpos = Position(newx,newy);
+	}
+	else if(direction == 3)
+	{
+		newx = newx - 4;
+		newpos = Position(newx,newy);
+	}
+	
+	return newpos;
 }
+
+Position Entity::getOrangeTarget()
+{
+	int newx = pos.getX(), newy = pos.getY();
+	Position newpos;
+	if(direction == 0) 
+	{
+		newy = newy - 2;
+		newpos = Position(newx,newy);
+	}
+	else if(direction == 1)
+	{
+		newy = newy + 2;
+		newpos = Position(newx,newy);
+	}
+	else if(direction == 2)
+	{
+		newx = newx + 2;
+		newpos = Position(newx,newy);
+	}
+	else if(direction == 3)
+	{
+		newx = newx - 2;
+		newpos = Position(newx,newy);
+	}
+	
+	return newpos;
+}
+
+
 
 Entity* Entity::clone() {
 	return new Entity(*this);

@@ -4,6 +4,7 @@
 #include "../libs/RedGhost.h"
 #include "../libs/PinkGhost.h"
 #include "../libs/BlueGhost.h"
+#include "../libs/OrangeGhost.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
@@ -58,29 +59,27 @@ Board::Board(string path) {
 			} else if (currentLine[i] == 'R') {
 				//board[currentIndex] = Piece::Ghost1;
 				pieceBoard->setEmpty(position);
-				Ghost* ghost = new RedGhost(currentGhostId, 2, Position(i, j), Direction::Right);
+				Ghost* ghost = new RedGhost(currentGhostId, 2, Position(i, j), Direction::Right, width);
 				ghosts[currentGhostId] = ghost;
 				currentGhostId++;
 			} else if (currentLine[i] == 'P') {
-				//board[currentIndex] = Piece::Ghost1;
+				//board[currentIndex] = Piece::Ghost2;
 				pieceBoard->setEmpty(position);
 				Ghost* ghost = new PinkGhost(currentGhostId, 2, Position(i, j), Direction::Right);
 				ghosts[currentGhostId] = ghost;
 				currentGhostId++;
-			/**} else if (currentLine[i] == 'B') {
-				//board[currentIndex] = Piece::Ghost1;
+			} else if (currentLine[i] == 'B') {
+				//board[currentIndex] = Piece::Ghost3;
 				pieceBoard->setEmpty(position);
-				Ghost* ghost = new BlueGhost(currentGhostId, 2, Position(i, j), Direction::Right);
+				Ghost* ghost = new BlueGhost(currentGhostId, 2, Position(i, j), Direction::Right, width);
 				ghosts[currentGhostId] = ghost;
 				currentGhostId++;
-			
-				} else if (currentLine[i] == 'O') {
-				//board[currentIndex] = Piece::Ghost1;
+			} else if (currentLine[i] == 'O') {
+				//board[currentIndex] = Piece::Ghost4;
 				pieceBoard->setEmpty(position);
-				Ghost* ghost = new OrangeGhost(currentGhostId, 2, Position(i, j), Direction::Right);
+				Ghost* ghost = new OrangeGhost(currentGhostId, 2, Position(i, j), Direction::Right, width);
 				ghosts[currentGhostId] = ghost;
 				currentGhostId++;
-			*/
 			} else if (currentLine[i] == '{') {
 				//board[currentIndex] = Piece::Player;
 				pieceBoard->setEmpty(position);
@@ -172,6 +171,7 @@ void Board::updateGhosts() {
 
 	for (int ghostId = 0; ghostId < 4; ghostId++) {
 		Ghost* ghost = ghosts[ghostId];
+		Ghost* redGhost = ghosts[0];
 		ghost->checkMode();
 		Position ghostPos = ghost->getPosition();
 		/*
@@ -183,7 +183,7 @@ void Board::updateGhosts() {
 			* ghost is in an intersection
 			* intersections have 3 or more surrounding squares 
 			*/
-			Direction newDirection = ghost->getNextDirection(pieceBoard, player);
+			Direction newDirection = ghost->getNextDirection(pieceBoard, player, redGhost);
 			ghost->setDirection(newDirection);
 			moveGhost(ghostId);
 		} else if (pieceBoard->isDeadEnd(ghostPos)) {

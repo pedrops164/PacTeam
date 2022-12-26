@@ -1,7 +1,7 @@
 
 
-bin/prog: obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o obj/RedGhost.o obj/PinkGhost.o obj/BlueGhost.o obj/PacmanAgent.o obj/PacmanKeyBoardAgent.o obj/PacmanMiniMaxAgent.o obj/EvaluationFunction.o
-	g++ -g -o bin/prog obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o obj/RedGhost.o obj/PinkGhost.o obj/BlueGhost.o obj/PacmanAgent.o obj/PacmanKeyBoardAgent.o obj/PacmanMiniMaxAgent.o obj/EvaluationFunction.o
+bin/prog: obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o obj/RedGhost.o obj/PinkGhost.o obj/BlueGhost.o obj/OrangeGhost.o obj/PacmanAgent.o obj/PacmanKeyBoardAgent.o obj/PacmanMiniMaxAgent.o obj/EvaluationFunction.o
+	g++ -g -o bin/prog obj/main.o obj/Position.o obj/Board.o obj/Entity.o obj/Game.o obj/Ghost.o obj/PieceBoard.o obj/Astar.o obj/Direction.o obj/RedGhost.o obj/PinkGhost.o obj/BlueGhost.o obj/OrangeGhost.o obj/PacmanAgent.o obj/PacmanKeyBoardAgent.o obj/PacmanMiniMaxAgent.o obj/EvaluationFunction.o
 
 obj/Board.o: src/Board.cpp libs/Board.h
 	g++ -Wall -g -c src/Board.cpp -o obj/Board.o
@@ -29,6 +29,9 @@ obj/PinkGhost.o: src/PinkGhost.cpp libs/PinkGhost.h
 
 obj/BlueGhost.o: src/BlueGhost.cpp libs/BlueGhost.h
 	g++ -Wall -g -c src/BlueGhost.cpp -o obj/BlueGhost.o
+
+obj/OrangeGhost.o: src/OrangeGhost.cpp libs/OrangeGhost.h
+	g++ -Wall -g -c src/OrangeGhost.cpp -o obj/OrangeGhost.o
 
 obj/Position.o: src/Position.cpp libs/Position.h
 	g++ -Wall -g -c src/Position.cpp -o obj/Position.o

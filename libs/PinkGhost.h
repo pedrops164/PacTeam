@@ -5,6 +5,6 @@ class PinkGhost: public Ghost
 public:
     PinkGhost(const PinkGhost& g);
     PinkGhost(int gId, int ticksPerMove, Position position, Direction direction);
-    Position getTargetPosition(Entity* pacman);
+    Position getTargetPosition(Entity* pacman, Ghost* redGhost);
     virtual Ghost* clone();
 };

@@ -9,7 +9,7 @@ PinkGhost::PinkGhost(int gId, int ticksPerMove, Position position, Direction dir
     {
 }
 
-Position PinkGhost::getTargetPosition(Entity* pacman) 
+Position PinkGhost::getTargetPosition(Entity* pacman, Ghost* redGhost) 
 {
 	if (isChaseMode()) 
     {
@@ -17,7 +17,7 @@ Position PinkGhost::getTargetPosition(Entity* pacman)
 	}
 	else if (isScatterMode()) 
     {
-		return scatterTarget; //TODO - SEE IF THE SCATTER TARGETS ARE OKAY
+		return scatterTarget;
 	}
 	return Position(-1, -1);
 	//the mode is scatter, this function shouldnt have been called

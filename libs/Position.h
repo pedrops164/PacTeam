@@ -13,12 +13,12 @@ public:
 	Position translate(Direction direction);
 	int getX();
 	int getY();
+	void setX(int newx);
+	void setY(int newy);
 	int manhattanDistance(Position endPos);
 	bool equals(Position pos);
 	Direction getDirection(Position newPos);
 	bool operator == (const Position& coords);
-	void setX(int x, Position pos);
-	double distanceCalculate(double x1, double y1, double x2, double y2);
 	Direction direction(Position endPos);
 };
 

@@ -24,7 +24,7 @@ Ghost::Ghost(int gId, int ticksPerMove, Position pos, Direction direction, Posit
 * In this case, calls the A* algorithm, with origin in the ghost position,
 * and destination in the pacman's position.
 */
-Direction Ghost::getNextDirection(PieceBoard* pb, Entity* pacman) {
+Direction Ghost::getNextDirection(PieceBoard* pb, Entity* pacman, Ghost* redGhost) {
 	Direction currentDirection = getDirection();
 	if (mode == Mode::Frightened) {
 		//return a random possible direction!
@@ -32,7 +32,7 @@ Direction Ghost::getNextDirection(PieceBoard* pb, Entity* pacman) {
 	}
 	else {
 		Position previousPosition = getPosition().translate(opposite(currentDirection));
-		Position endPosition = getTargetPosition(pacman);
+		Position endPosition = getTargetPosition(pacman, redGhost);
 		return Astar::getOptimalDirection(pb, getPosition(), endPosition, previousPosition);
 	}
 	

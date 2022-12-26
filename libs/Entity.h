@@ -20,7 +20,7 @@ public:
 	Direction getDirection();
 	Position getPosition();
 	Position getPinkTarget();
-	Position getBlueTarget();
+	Position getOrangeTarget();
 	void setPosition(Position position);
 	void setDirection(Direction newDirection);
 	void print();
