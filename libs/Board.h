@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <vector>
 #include <string>
 #include "Entity.h"
 #include "Ghost.h"
@@ -24,11 +25,13 @@ public:
 	void moveGhost(int ghostId);
 	void changePlayerDirection(Direction newDirection);
 	void changeGhostDirection(int ghostId, Direction newDirection);
-	void updatePlayer();
 	void updateGhosts();
 	void moveCurveTunnel(Entity* ghost);
 	void setCurveDirection(Entity* ghost);
 	Board* clone();
+	std::vector<Board*> getPacmanChildStates();
+	std::vector<Board*> getGhostsChildStates();
+	Entity* getPacman();
 };
 
 #endif

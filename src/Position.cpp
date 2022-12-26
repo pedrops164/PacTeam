@@ -94,3 +94,22 @@ double distanceCalculate(double x1, double y1, double x2, double y2)
 
 	return dist;
 }
+
+Direction Position::direction(Position endPos) {
+	int diffX = endPos.getX() - x;
+	int diffY = endPos.getY() - y;
+
+	if (diffX == 1 && diffY == 0) {
+		return Right;
+	}
+	else if (diffX == -1 && diffY == 0) {
+		return Left;
+	}
+	else if (diffX == 0 && diffY == 1) {
+		return Down;
+	}
+	else if (diffX == 0 && diffY == -1) {
+		return Up;
+	}
+	return Null;
+}

@@ -33,7 +33,7 @@ public:
 	bool isFrightenedMode();
 	bool isScatterMode();
 	void reverseDirection();
-	Ghost* clone(); //maybe needs change
+	virtual Ghost* clone(); //maybe needs change
 protected:
 	Position scatterTarget;
 };

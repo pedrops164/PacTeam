@@ -22,7 +22,8 @@ Board::Board(const Board& board) {
 	pieceBoard = board.pieceBoard->clone();
 	player = board.player->clone();
 	for (int i = 0; i < 4; i++) {
-		ghosts[i] = board.ghosts[i]->clone();
+		Ghost* currGhost = board.ghosts[i];
+		ghosts[i] = currGhost->clone();
 	}
 }
 
@@ -129,6 +130,9 @@ void Board::movePlayer() {
 		//add the point system later
 		if (pieceBoard->isBigFood(newPosition)) {
 			for (int i = 0; i < 4; i++) {
+				if (ghosts[i] == nullptr) {
+					std::cout << "nullptr" << std::endl;
+				}
 				ghosts[i]->frighten();
 			}
 		}
@@ -245,4 +249,48 @@ void Board::setCurveDirection(Entity* ghost) {
 
 Board* Board::clone() {
 	return new Board(*this);
+}
+
+/*
+* Returns a vector with every possible state coming from pacman
+* moving to any possible direction
+*/
+std::vector<Board*> Board::getPacmanChildStates() {
+	std::vector<Board*> possibleStates;
+	std::vector<Direction> possibleDirections;
+	Position pacmanPos = player->getPosition();
+	for (int i = 0; i < 4; i++) {
+		Direction currentDirection = (Direction)i;
+		Position newPos = pacmanPos.translate(currentDirection);
+		if (!pieceBoard->isWall(newPos)) {
+			possibleDirections.push_back(currentDirection);
+		}
+	}
+	//at this point, possibleDirections contains all possible directions to move
+	std::vector<Direction>::iterator it = possibleDirections.begin();
+	for (; it != possibleDirections.end(); ++it) {
+		Direction currentDirection = *it;
+		Board* newState = this->clone();
+		newState->changePlayerDirection(currentDirection);
+		newState->movePlayer();
+		possibleStates.push_back(newState);
+	}
+	return possibleStates;
+}
+
+/*
+* Returns a vector with every possible state coming from ghosts
+* moving to any possible direction
+* At this point, it is just returning the state where the ghosts are moving next
+*/
+std::vector<Board*> Board::getGhostsChildStates() {
+	std::vector<Board*> possibleStates;
+	Board* newState = this->clone();
+	newState->updateGhosts();
+	possibleStates.push_back(newState);
+	return possibleStates;
+}
+
+Entity* Board::getPacman() {
+	return player;
 }
