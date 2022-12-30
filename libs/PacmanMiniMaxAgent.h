@@ -8,5 +8,5 @@ private:
 public:
 	PacmanMiniMaxAgent(EvaluationFunction* _ef);
 	void updateState(Board* board);
-	Evaluation minimax(Board* state, int depth, bool maximizingPlayer);
+	Evaluation minimax(Board* state, int depth, Evaluation alpha, Evaluation beta, bool maximizingPlayer);
 };
