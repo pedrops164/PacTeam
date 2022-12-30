@@ -59,6 +59,11 @@ char* PieceBoard::getRepresentation() {
 	return representation;
 }
 
+bool PieceBoard::isPiece(Position pos, Piece p) {
+	int index = getIndex(pos);
+	return board[index] == p;
+}
+
 bool PieceBoard::isWall(Position position) {
 	int index = getIndex(position);
 	return board[index] == Wall;

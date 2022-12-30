@@ -16,7 +16,10 @@ private:
 	int height;
 	PieceBoard* pieceBoard;
 	Entity* player;
+	Position pacmanStartingPos;
 	Ghost* ghosts[4];
+	Position ghostsStartingPos[4];
+	int points;
 public:
 	Board(const Board& board);
 	Board(std::string mapPath);
@@ -32,6 +35,12 @@ public:
 	std::vector<Board*> getPacmanChildStates();
 	std::vector<Board*> getGhostsChildStates();
 	Entity* getPacman();
+	PieceBoard* getPieceBoard();
+	int getWidth();
+	int getHeight();
+	int getPoints();
+	bool collisionGhosts(Position pos);
+	void ghostEatPacman();
 };
 
 #endif

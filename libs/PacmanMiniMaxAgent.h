@@ -1,3 +1,4 @@
+#include "Evaluation.h"
 #include "PacmanAgent.h"
 #include "EvaluationFunction.h"
 
@@ -7,5 +8,5 @@ private:
 public:
 	PacmanMiniMaxAgent(EvaluationFunction* _ef);
 	void updateState(Board* board);
-	int minimax(Board* state, int depth, bool maximizingPlayer);
+	Evaluation minimax(Board* state, int depth, bool maximizingPlayer);
 };

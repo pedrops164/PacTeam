@@ -22,9 +22,12 @@ Board::Board(const Board& board) {
 	height = board.height;
 	pieceBoard = board.pieceBoard->clone();
 	player = board.player->clone();
+	points = board.points;
+	pacmanStartingPos = board.pacmanStartingPos;
 	for (int i = 0; i < 4; i++) {
 		Ghost* currGhost = board.ghosts[i];
 		ghosts[i] = currGhost->clone();
+		ghostsStartingPos[i] = board.ghostsStartingPos[i];
 	}
 }
 
@@ -38,6 +41,7 @@ Board::Board(string path) {
 	string currentLine;
 	getline(map, currentLine);
 	istringstream iss(currentLine);
+	points = 0; //pacman starts with 0 points
 	/*
 	* First line of file is width and height of map
 	* So first we get these values from the files and put in variables width and height
@@ -61,29 +65,34 @@ Board::Board(string path) {
 				pieceBoard->setEmpty(position);
 				Ghost* ghost = new RedGhost(currentGhostId, 2, Position(i, j), Direction::Right, width);
 				ghosts[currentGhostId] = ghost;
+				ghostsStartingPos[currentGhostId] = ghost->getPosition();
 				currentGhostId++;
 			} else if (currentLine[i] == 'P') {
 				//board[currentIndex] = Piece::Ghost2;
 				pieceBoard->setEmpty(position);
 				Ghost* ghost = new PinkGhost(currentGhostId, 2, Position(i, j), Direction::Right);
 				ghosts[currentGhostId] = ghost;
+				ghostsStartingPos[currentGhostId] = ghost->getPosition();
 				currentGhostId++;
 			} else if (currentLine[i] == 'B') {
 				//board[currentIndex] = Piece::Ghost3;
 				pieceBoard->setEmpty(position);
 				Ghost* ghost = new BlueGhost(currentGhostId, 2, Position(i, j), Direction::Right, width);
 				ghosts[currentGhostId] = ghost;
+				ghostsStartingPos[currentGhostId] = ghost->getPosition();
 				currentGhostId++;
 			} else if (currentLine[i] == 'O') {
 				//board[currentIndex] = Piece::Ghost4;
 				pieceBoard->setEmpty(position);
 				Ghost* ghost = new OrangeGhost(currentGhostId, 2, Position(i, j), Direction::Right, width);
 				ghosts[currentGhostId] = ghost;
+				ghostsStartingPos[currentGhostId] = ghost->getPosition();
 				currentGhostId++;
 			} else if (currentLine[i] == '{') {
 				//board[currentIndex] = Piece::Player;
 				pieceBoard->setEmpty(position);
 				player = new Entity(3, 1, Position(i, j), Direction::Right);
+				pacmanStartingPos = player->getPosition();
 			}
 		}
 	}
@@ -134,6 +143,14 @@ void Board::movePlayer() {
 				}
 				ghosts[i]->frighten();
 			}
+			points += 200;
+		}
+		else if (pieceBoard->isPiece(newPosition, Piece::Food)) {
+			points += 10;
+		}
+
+		if (collisionGhosts(newPosition)) {
+			ghostEatPacman();
 		}
 		pieceBoard->setEmpty(newPosition);
 		player->setPosition(newPosition);
@@ -150,6 +167,9 @@ void Board::moveGhost(int ghostId) {
 	Position newPosition = currentPosition.translate(currentDirection);
 	if (!pieceBoard->isWall(newPosition)) {
 		ghost->setPosition(newPosition);
+		if (newPosition.equals(player->getPosition())) {
+			ghostEatPacman();
+		}
 	}
 }
 
@@ -293,4 +313,36 @@ std::vector<Board*> Board::getGhostsChildStates() {
 
 Entity* Board::getPacman() {
 	return player;
+}
+
+PieceBoard* Board::getPieceBoard() {
+	return pieceBoard;
+}
+
+int Board::getWidth() {
+	return width;
+}
+
+int Board::getHeight() {
+	return height;
+}
+
+int Board::getPoints() {
+	return points;
+}
+
+bool Board::collisionGhosts(Position pos) {
+	for (int i = 0; i < 4; i++) {
+		Position posGhost = ghosts[i]->getPosition();
+		if (pos.equals(posGhost)) return true;
+	}
+	return false;
+}
+
+void Board::ghostEatPacman() {
+	points -= 500;
+	player->setPosition(pacmanStartingPos);
+	for (int i = 0; i < 4; i++) {
+		ghosts[i]->setPosition(ghostsStartingPos[i]);
+	}
 }

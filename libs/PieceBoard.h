@@ -24,6 +24,7 @@ public:
 	void setSmallFood(Position pos);
 	void setEmpty(Position pos);
 	char* getRepresentation();
+	bool isPiece(Position pos, Piece p);
 	bool isWall(Position position);
 	bool isBigFood(Position pos);
 	bool isInvalid(Position position);

@@ -6,7 +6,7 @@
 
 class EvaluationFunction {
 public:
-	int evaluate(Board* board);
+	Evaluation evaluate(Board* board);
 };
 
 #endif
