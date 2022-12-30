@@ -6,7 +6,7 @@
 Evaluation EvaluationFunction::evaluate(Board* board) {
 	//TODO
 	int evaluation1 = board->getPoints();
-	int evaluation2 = BFS::getClosestPieceDistanceFromPacman(Piece::Food, board);
+	int evaluation2 = - BFS::getClosestPieceDistanceFromPacman(Piece::Food, board);
 	std::vector<int> e;
 	e.push_back(evaluation1);
 	e.push_back(evaluation2);

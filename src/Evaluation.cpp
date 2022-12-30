@@ -49,3 +49,7 @@ bool operator > (const Evaluation& e) const {
 	return Compare(e) > 0;
 }
 */
+
+int Evaluation::getEvaluation(int index) {
+	return ev_list[index];
+}

@@ -11,6 +11,7 @@ public:
 	Evaluation(std::vector<int> evaluations);
 	Evaluation(int eval);
 	int compare(Evaluation e2);
+	int getEvaluation(int index);
 };
 
 #endif
